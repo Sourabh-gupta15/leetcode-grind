@@ -1,0 +1,28 @@
+https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        vector<int>ans;
+        int j=0; int i =numbers.size()-1;
+  while(j<=i){
+      if(numbers[i]+numbers[j]==target){
+         return {j+1,i+1};
+      }
+      else if(numbers[i]+numbers[j]>target){
+          i--;
+      }
+      else{
+          j++;
+      }
+
+  }
+      
+                        
+    
+        
+               
+        
+     
+     return { };
+    }
+};
