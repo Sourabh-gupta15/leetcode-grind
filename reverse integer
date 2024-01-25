@@ -1,0 +1,21 @@
+https://leetcode.com/problems/reverse-integer/descriptio
+
+class Solution {
+public:
+    int reverse(int x) {
+     long long  int reverse=0;
+     
+     while(x!=0){
+        int lastDigit=x%10;
+         reverse = lastDigit+ reverse*10;
+         x=x/10;
+              }
+   
+    if(reverse>INT_MAX||reverse<INT_MIN){
+     return  0;
+    }
+    return reverse;
+     }
+    
+     };
+        
