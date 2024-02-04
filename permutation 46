@@ -1,0 +1,23 @@
+https://leetcode.com/problems/permutations/description/
+
+class Solution {
+public:
+void permutationHelper(vector<int>&nums,vector<vector<int>>&ans,int j)
+{
+    if(j==nums.size()){
+        ans.push_back(nums);
+        return ;
+
+    }
+    for(int i=j;i<nums.size();i++){
+        swap(nums[i],nums[j]);
+        permutationHelper(nums,ans,j+1);
+        swap(nums[i],nums[j]);
+    }
+}    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>>ans;
+        permutationHelper(nums,ans,0);
+        return ans;
+
+    }
+};
