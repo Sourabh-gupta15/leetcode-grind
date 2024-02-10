@@ -1,0 +1,24 @@
+https://leetcode.com/problems/palindromic-substrings/description/?envType=daily-question&envId=2024-02-10
+
+class Solution {
+public:
+ int expands(string s,int i ,int j){
+     int count=0;
+     while(i>=0 &&j<s.length()&&s[i]==s[j]){
+         count++;
+         i--;
+         j++;
+     }
+     return count;
+ }
+    int countSubstrings(string s) {
+        int count=0;
+        for(int i=0;i<s.length();i++){
+            int oddAns=expands(s,i,i);
+            count =count+oddAns;
+            int evenAns=expands(s,i,i+1);
+            count =count+evenAns;
+        }
+        return count;
+    }
+};
