@@ -1,0 +1,3 @@
+
+          //backtrack
+     insertAtBottom(stri,t
