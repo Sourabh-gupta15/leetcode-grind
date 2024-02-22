@@ -1,0 +1,109 @@
+https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+int getLength(ListNode*&head){
+    int len=0;
+    ListNode*temp=head;
+    while(temp!=NULL){
+        len++;
+        temp=temp->next;
+    }
+    return len;
+}
+    ListNode* swapNodes(ListNode* head, int k) {
+        //case 1
+        if(!head||!head->next){
+            return head;
+        }
+        int len=getLength(head);
+        int left=k;
+        int right=len-k+1;
+        if(right<left)
+        swap(left,right);
+
+        //case 2
+        if(left==right)return head;
+        //case =3
+        if(len==2){
+         ListNode*newNode=head->next;
+         head->next=NULL;
+         newNode->next=head;head=newNode;
+         return head;
+        }
+        //case 4
+        if(left==1){
+            ListNode*lp=0;
+            ListNode*ln=head;
+            ListNode*rp=head;
+            for(int i=0;i<right-2;i++){
+                rp=rp->next;
+            }
+            ListNode*rn=rp->next;
+            ListNode*rSave=0;
+            //swapping
+            rn->next=ln->next;
+            rp->next=ln;
+            ln->next=rSave;
+            head=rn;
+            return head;
+
+        }
+        int noOfNodesBetweenSwapNodes=right-left-1;
+        //case 5
+        if(!noOfNodesBetweenSwapNodes){
+             ListNode*lp=head;
+             for(int i=0;i<left-2;i++){
+                 lp=lp->next;
+             }
+
+            ListNode*ln=lp->next;;
+            ListNode*rp=head;
+            for(int i=0;i<right-2;i++){
+                rp=rp->next;
+            }
+            ListNode*rn=rp->next;
+            ListNode*rSave=rn->next;
+            //swapping
+            lp->next=rp->next;
+            rn->next=rp;
+            rp->next=rSave;
+        
+            return head;
+        }
+        else{ 
+            //case 6
+             ListNode*lp=head;
+             for(int i=0;i<left-2;i++){
+                 lp=lp->next;
+             }
+
+            ListNode*ln=lp->next;;
+            ListNode*rp=head;
+            for(int i=0;i<right-2;i++){
+                rp=rp->next;
+            }
+            ListNode*rn=rp->next;
+            ListNode*rSave=rn->next;
+            //swapping
+            lp->next=rn;
+            rn->next=ln->next;
+            rp->next=ln;
+            ln->next=rSave;
+        
+            return head;
+
+        }
+
+    }
+};
