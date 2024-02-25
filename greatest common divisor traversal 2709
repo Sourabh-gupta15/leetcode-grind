@@ -1,0 +1,82 @@
+https://leetcode.com/problems/greatest-common-divisor-traversal/description/?envType=daily-question&envId=2024-02-25
+
+class Solution {
+private:
+    // using
+    // 1. Union by rank - union keeping height as low as possible
+    // 2. path compression - reordering the parent array
+    // which makes the amortized TC as O(1)
+    // find function which uses path compression
+    int find(int x, int par[]){
+        if(x == par[x])   return x;
+        par[x] = find(par[x], par);
+        return par[x];
+    }
+    // union finction which uses union by rank
+    void union_(int a, int b, int par[], int rank[]){
+        int x = find(a,par);
+        int y = find(b,par);
+        if(rank[x] < rank[y])
+            par[x] = y;
+        else if(rank[x] > rank[y])
+            par[y] = x;
+        else{
+            par[y] = x;
+            rank[x]++;
+        }
+    }
+    // now, functions to find the smallest prime factor using sieve
+    vector<int> spf;
+    void buildSieve() {
+        spf.resize(100001, -1);
+        spf[0] = spf[1] = 1;
+        for (long j = 2; j < 100001; j++) {
+            if(spf[j] == -1) {
+                spf[j] = j;
+                for(long k = j * j; k < 100001; k += j)
+                    spf[k] = j; 
+            }
+        }
+    }
+    //Function to determine number of connected components.
+    int connCom(int N, int par[], int rank[]) {
+        // just find number of unique par array values or arr values
+        unordered_set<int> s;
+        for(int i = 0; i < N; i++)
+            s.insert(find(i, par));
+        return s.size();
+    }
+public:
+    bool canTraverseAllPairs(vector<int>& nums) {
+        // finding all prime factors, for all numbers and creating
+        buildSieve();
+        vector<int> adj[100001];
+        int N = nums.size();
+        for(int i = 0; i < N; i++) {
+            int curr = nums[i];
+            while(curr > 1) {
+                int f = spf[curr];
+                adj[f].push_back(i);
+                curr /= f;
+            }
+        }
+        // creating parent and rank array
+	    int par[N];
+	    int rank[N];
+	    for(int i = 0; i < N; i++) {
+	        par[i] = i;
+	        rank[i] = 1;
+	    }
+        // now using union find to union all same prime factor elements
+        for(int i = 0; i < 100001; i++) {
+            int sz = adj[i].size();
+            for(int j = 1; j < sz; j++) {
+                union_(adj[i][j], adj[i][j - 1], par, rank);
+            }
+        }
+        // now, finding number of connected components and returning answer
+        if(connCom(N, par, rank) == 1)
+            return true;
+        return false;
+    }
+};
