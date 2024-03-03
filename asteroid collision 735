@@ -1,0 +1,49 @@
+https://leetcode.com/problems/asteroid-collision/description/
+
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& asteroids) {
+             stack<int>st;
+             for(auto ast:asteroids){
+                 bool destroy=false;
+                 //intial nothing destroy
+                 if(ast>0){
+                     st.push(ast);
+                 }
+                 else{
+                     //-ve
+                     if(st.empty()||st.top()<0){
+                         st.push(ast);
+                     }
+                     else{
+                         //collosion
+                         while(!st.empty()&&st.top()>0){
+                             if(abs(ast)==st.top()){
+                                 destroy=true;
+                                 st.pop();
+                                 break;// [5,10,-5,-10] this will give ans [5];
+                             }
+                             else if(abs(ast)>st.top()){
+                                 st.pop();
+                             }
+                             else{
+                                 destroy=true;
+                                 break;
+                             }
+                         }
+                         if(!destroy){  //new asteriod destroy hua ha ya nhi ya usse condn ke liye ha [5,10,-20] ans will [-20];
+                             st.push(ast);//
+                         }
+                     }
+        
+                 }
+
+             }     
+             vector<int>ans(st.size());
+             for(int i=st.size()-1;i>=0;i--){
+                 ans[i]=st.top();
+                 st.pop();
+             }    
+             return ans;
+    }
+};
