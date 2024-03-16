@@ -1,0 +1,31 @@
+https://leetcode.com/problems/binary-subarrays-with-sum/
+class Solution {
+public:
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        int s=0;int e=0;int sum=0;int prefix=0;int count=0;
+        while(e<nums.size()){
+           sum+=nums[e];
+           //minimise 
+           while(s<e && (sum>goal||nums[s]==0)){
+                 //ans
+                 if(nums[s]==1){
+                    prefix=0;
+                 }
+                 else{
+                    prefix+=1;
+                 }
+                 //sum//
+                 sum=sum-nums[s];
+                 s++;
+                 
+
+           }
+           if(sum==goal){
+            count+=prefix+1;// +1 isliye he kyuki 101 testecase proof  wo while loop me prefix + 1 krna padega kyuki saree case include honge usse whilecondition ke according 
+           }
+           //means explore krna he 
+            e++;
+        }
+        return count;
+    }
+};
