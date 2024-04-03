@@ -1,0 +1,48 @@
+https://leetcode.com/problems/longest-palindromic-subsequence/description/
+
+class Solution {
+public:
+ int solveTab(string a, string b) {
+        vector<vector<int>> dp(a.length() + 1, vector<int>(b.length() + 1, 0));
+        for (int i_index = a.length() - 1; i_index >= 0;
+             i_index--) { // loop row wise chal rahi he
+            for (int j_index = b.length() - 1; j_index >= 0; j_index--) {
+                int ans = 0;
+                if (a[i_index] == b[j_index]) {
+                    ans = 1 + dp[i_index + 1][j_index + 1];
+                } else {
+                    ans = 0 + max(dp[i_index + 1][j_index],
+                                  dp[i_index][j_index + 1]);
+                }
+                dp[i_index][j_index] = ans;
+            }
+        }
+        return dp[0][0];
+    }
+int solveUsingSp(string & a, string &b) {
+        vector<int> curr(a.length() + 1, 0); // a represent no. of rows ...
+        vector<int> next(b.length() + 1, 0); // b represent no. if column ...
+        for (int j_index = b.length() - 1; j_index >= 0;
+             j_index--) { // loop row wise chal re he toh coulmn wise chalu
+            for (int i_index = a.length() - 1; i_index >= 0; i_index--) {
+                int ans = 0;
+                if (a[i_index] == b[j_index]) {
+                    ans = 1 + next[i_index + 1];
+                } else {
+                    ans = 0 + max(curr[i_index + 1], next[j_index + 1]);
+                }
+                curr[i_index] = ans;
+            }
+            // shifting
+            next = curr;
+        }
+        return next[0];
+    }
+    int longestPalindromeSubseq(string s) {
+        string a= s;
+        reverse(a.begin(),a.end());
+        //same logic as longest common subsequenece  que 1143.
+        int ans=solveTab(a,s);    
+        return ans;
+        }
+};
