@@ -1,0 +1,89 @@
+https://leetcode.com/problems/edit-distance/description/
+
+class Solution {
+public:
+    int solve(string& str, string& str2, int i, int j) {
+        if (i >= str.length()) {
+            return str2.length() - j;
+        }
+        if (j >= str2.length()) {
+            return str.length() - i; // str se extra char subtratct - krna
+                                     // padega
+        }
+        int ans = 0;
+        // char matching
+        if (str[i] == str2[j]) {
+            ans = 0 + solve(str, str2, i + 1, j + 1);
+        }
+        // char not matching
+        else {
+            int option1 = 1 + solve(str, str2, i, j + 1);     // insert
+            int option2 = 1 + solve(str, str2, i + 1, j);     // delete
+            int option3 = 1 + solve(str, str2, i + 1, j + 1); // replace
+            ans = min(option1, min(option2, option3));
+        }
+
+        return ans;
+    }
+    int solveUsingMem(string& str, string& str2, int i, int j,
+                      vector<vector<int>>& dp) {
+        if (i >= str.length()) {
+            return str2.length() - j;
+        }
+        if (j >= str2.length()) {
+            return str.length() - i;
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
+        int ans = 0;
+        if (str[i] == str2[j]) {
+            ans = 0 + solveUsingMem(str, str2, i + 1, j + 1, dp);
+        } else {
+            int option1 = 1 + solveUsingMem(str, str2, i, j + 1, dp);
+            int option2 = 1 + solveUsingMem(str, str2, i + 1, j, dp);
+            int option3 = 1 + solveUsingMem(str, str2, i + 1, j + 1, dp);
+            ans = min(option1, min(option2, option3));
+        }
+        dp[i][j] = ans;
+        return dp[i][j];
+    }
+    int solveUsingTab(string a, string b) {
+        vector<vector<int>> dp(a.length() + 1,
+                               vector<int>(b.length() + 1, -1));
+        // base case analysis
+        // column traverse
+        for (int col = 0; col <= b.length(); col++) {
+            dp[a.length()][col] = b.length() - col; // j represent col
+        }
+        for (int row = 0; row <= a.length(); row++) {
+            dp[row][b.length()] = a.length() - row; // row represent i
+        }
+        for (int i = a.length() - 1; i >= 0; i--) {
+            for (int j = b.length() - 1; j >= 0; j--) {
+                int ans = 0;
+                if (a[i] == b[j]) {
+                    ans = 0 + dp[i + 1][ j + 1] ;
+                } else {
+                    int option1 = 1 + dp[i][j + 1];
+                    int option2 = 1 + dp[i + 1][j];
+                    int option3 =
+                        1 + dp[i + 1][j + 1];
+                    ans = min(option1, min(option2, option3));
+                }
+                dp[i][j] = ans;}}
+                return dp[0][0];
+            
+        
+    }
+    int minDistance(string word1, string word2) {
+        int i = 0;
+        int j = 0;
+        // int ans=solve(word1,word2,i,j);
+       // vector<vector<int>> dp(word1.length() + 1,
+                             //  vector<int>(word2.length() + 1, -1));
+      //  int ans = solveUsingMem(word1, word2, i, j, dp);
+        int ans = solveUsingTab(word1, word2);
+        return ans;
+    }
+};
