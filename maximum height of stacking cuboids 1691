@@ -1,0 +1,57 @@
+https://leetcode.com/problems/maximum-height-by-stacking-cuboids/description/
+
+class Solution {
+public:
+
+
+        bool check(vector<int>&curr,vector<int>&prev){
+            //curr -> bade wala box 
+            //prev->chotte wala box
+            if(prev[0]<=curr[0]&&prev[1]<=curr[1]&&prev[2]<=curr[2]){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+         int tabSo(vector<vector<int>>& cuboids) {
+        int n = cuboids.size();
+       // vector<vector<int>> dp(
+          //  n + 1, vector<int>(n + 1, 0)); // base case analysis handled
+          vector<int>next(n+1,0);
+          vector<int>curr(n+1,0);//row pe dependency so row wise changes occur
+        for (int curr_index = n - 1; curr_index >= 0; curr_index--) {
+            for (int prev_index = curr_index - 1; prev_index >= -1;
+                 prev_index--) {
+                int include = 0;
+                if (prev_index == -1 || check(cuboids[curr_index] ,cuboids[prev_index])) {
+                    int heightToAdd=cuboids[curr_index][2];
+                    include =
+                        heightToAdd + next[curr_index+1];
+                                
+                }
+                int exclude =
+                    0 +next[prev_index+1];
+                int ans = max(include, exclude); 
+                curr[prev_index + 1] =ans;
+                    // prev +1 index shifting because intially prev =-1 tha
+                         // toh dp[curr][-1] not exist that's why we add 1 tp
+                         // prev that's call index shifting
+                         }
+                         next=curr;
+                         }
+                return next[0];//index shifting prev +1 =0
+            
+        }
+        
+
+    int maxHeight(vector<vector<int>>& cuboids) {
+        for(auto & cuboid:cuboids){//actual array ko sort kiya he by passing refrenece (&) used ; ;
+            sort(cuboid.begin(),cuboid.end());//sort all dimensions
+        }
+         sort(cuboids.begin(),cuboids.end());
+         //same logic as lis pattern ;
+         int ans =tabSo(cuboids);
+         return ans;
+    }
+};
