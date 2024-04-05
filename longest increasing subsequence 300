@@ -1,0 +1,132 @@
+https://leetcode.com/problems/longest-increasing-subsequence/description/
+
+class Solution {
+public:
+    int solveUsingRecursion(vector<int>& nums, int curr, int prev) {
+        if (curr >= nums.size()) {
+            return 0; // include exclude lrne ke liye number he nhi he
+        }
+
+        int include = 0;
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            include = 1 + solveUsingRecursion(
+                              nums, curr + 1,
+                              curr); // prev+1 nhi kiya kyu ki wo galat value le
+                                     // lega that's why prev =curr;
+        }
+        int exclude = 0 + solveUsingRecursion(nums, curr + 1, prev);
+        int ans = max(include, exclude);
+        return ans;
+    }
+    int solveUsingRecursionMem(vector<int>& nums, int curr, int prev,
+                               vector<vector<int>>& dp) {
+        if (curr >= nums.size()) {
+            return 0; // include exclude lrne ke liye number he nhi he
+        }
+        // if ans alredy exists
+        if (dp[curr][prev + 1] != -1) {
+            return dp[curr][prev + 1];
+        }
+        int include = 0;
+        if (prev == -1 || nums[curr] > nums[prev]) {
+            include = 1 + solveUsingRecursionMem(
+                              nums, curr + 1, curr,
+                              dp); // prev+1 nhi kiya kyu ki wo galat value le
+                                   // lega that's why prev =curr;
+        }
+        int exclude = 0 + solveUsingRecursionMem(nums, curr + 1, prev, dp);
+        int ans = max(include, exclude);
+        dp[curr][prev + 1] =
+            ans; // prev +1 index shifting because intially prev =-1 tha toh
+                 // dp[curr][-1] not exist that's why we add 1 tp prev that's
+                 // call index shifting
+        return dp[curr][prev + 1];
+    }
+    // tabulation
+    int tab(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(
+            n + 1, vector<int>(n + 1, 0)); // base case analysis handled
+        for (int curr_index = n - 1; curr_index >= 0; curr_index--) {
+            for (int prev_index = curr_index - 1; prev_index >= -1;
+                 prev_index--) {
+                int include = 0;
+                if (prev_index == -1 || nums[curr_index] > nums[prev_index]) {
+                    include =
+                        1 + dp[curr_index + 1][curr_index+1];
+                                
+                }
+                int exclude =
+                    0 +dp[curr_index + 1][prev_index+1];
+                int ans = max(include, exclude);
+                dp[curr_index][prev_index + 1] =
+                    ans; // prev +1 index shifting because intially prev =-1 tha
+                         // toh dp[curr][-1] not exist that's why we add 1 tp
+                         // prev that's call index shifting
+                         }}
+                return dp[0][0];//index shifting prev +1 =0
+            
+        }
+        int tabSo(vector<int>& nums) {
+        int n = nums.size();
+       // vector<vector<int>> dp(
+          //  n + 1, vector<int>(n + 1, 0)); // base case analysis handled
+          vector<int>next(n+1,0);
+          vector<int>curr(n+1,0);//row pe dependency so row wise changes occur
+        for (int curr_index = n - 1; curr_index >= 0; curr_index--) {
+            for (int prev_index = curr_index - 1; prev_index >= -1;
+                 prev_index--) {
+                int include = 0;
+                if (prev_index == -1 || nums[curr_index] > nums[prev_index]) {
+                    include =
+                        1 + next[curr_index+1];
+                                
+                }
+                int exclude =
+                    0 +next[prev_index+1];
+                int ans = max(include, exclude); 
+                curr[prev_index + 1] =ans;
+                    // prev +1 index shifting because intially prev =-1 tha
+                         // toh dp[curr][-1] not exist that's why we add 1 tp
+                         // prev that's call index shifting
+                         }
+                         next=curr;
+                         }
+                return next[0];//index shifting prev +1 =0
+            
+        }
+        //binary search
+        int solveUsingBS(vector<int>&nums){
+            vector<int>ans;
+            //intial state
+            ans.push_back(nums[0]);
+            for(int i=1;i<nums.size();i++){
+                if(nums[i]>ans.back()){
+                    ans.push_back(nums[i]);
+                }
+                else{
+                    //just bada number exist kreta hai
+                    int index=lower_bound(ans.begin(),ans.end(),nums[i])-ans.begin();
+                    //replace 
+                    ans[index]=nums[i];
+                    
+                }
+            }
+            return ans.size();
+        }
+          
+    
+    int lengthOfLIS(vector<int>& nums) {
+        int curr = 0;
+        int prev = -1;
+        int n = nums.size();
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, -1)); // 2d dp
+        // int ans=solveUsingRecursion(nums,curr,prev);
+        // int ans=solveUsingRecursionMem(nums,curr,prev,dp);
+
+        //int ans = tab(nums);
+      //  int ans=tabSo(nums);
+      int ans=solveUsingBS(nums);
+        return ans;
+    }
+};
