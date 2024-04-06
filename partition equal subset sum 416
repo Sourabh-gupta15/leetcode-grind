@@ -1,0 +1,111 @@
+https://leetcode.com/problems/partition-equal-subset-sum/description/
+
+class Solution {
+public:
+    bool solveUsingRec(vector<int>& arr, int index, int sum, int target) {
+        if (index >= arr.size()) {
+            return 0;
+        }
+        if (sum > target) {
+            return 0;
+        }
+        if (sum == target) {
+            return true;
+        }
+        // recursion
+        bool include = solveUsingRec(arr, index + 1, sum + arr[index], target);
+        bool exclude = solveUsingRec(arr, index + 1, sum, target);
+        return include || exclude;
+    }
+    bool solveUsingMem(vector<int>& arr, int index, int sum, int target,
+                       vector<vector<int>>& dp) {
+
+        if (index >= arr.size()) {
+            return 0;
+        }
+        if (sum > target) {
+            return 0;
+        }
+        if (sum == target) {
+            return true;
+        }
+        if (dp[index][sum] != -1) {
+            return dp[index][sum];
+        }
+        // recursion
+        bool include =
+            solveUsingMem(arr, index + 1, sum + arr[index], target, dp);
+        bool exclude = solveUsingMem(arr, index + 1, sum, target, dp);
+        dp[index][sum] = (include || exclude);
+        return dp[index][sum];
+    }
+    bool solveUsingTab(vector<int>& arr, int target) {
+        vector<vector<int>> dp(arr.size() + 2, vector<int>(target + 1, 0));
+        // sum represent col
+        int n=arr.size();
+        for (int row = 0; row <= arr.size(); row++) {
+            dp[row][target] = 1;
+        }
+        // recursion me 0 se n jara tha
+        for (int index = n-1; index >= 0; index--) {
+            // sum 0 se target jara tha toh yaha ulta
+            for (int s = target; s >= 0; s--) {
+                bool include =0;
+                if(s+arr[index]<=target){// for valid index cond.
+                 include=   dp[index + 1][s + arr[index]];}
+                bool exclude = dp[index + 1][s];
+            
+            dp[index][s]=(include||exclude);}
+        }
+        return dp[0][0];
+    }
+    //space optimisation i th row depends on i+1 th row so sp is possible 
+         //row wise 2 arrays
+             bool solveUsingSp(vector<int>& arr, int target) {
+       
+        // sum represent col
+        vector<int>curr(target+1,0);
+        vector<int>next(target+1,0);
+        
+        curr[target]=1;
+        next[target]=1;
+        int n=arr.size();
+
+       
+        // recursion me 0 se n jara tha
+        for (int index = n-1; index >= 0; index--) {
+            // sum 0 se target jara tha toh yaha ulta
+            for (int s = target; s >= 0; s--) {
+                bool include =0;
+                if(s+arr[index]<=target){// for valid index cond.
+                 include=   next[s + arr[index]];}
+                bool exclude = next[s];
+            
+            curr[s]=(include||exclude);}
+            //shifting 
+            next=curr;
+        }
+        return next[0];
+    }
+
+
+    bool canPartition(vector<int>& nums) { // 2d dp
+        int index = 0;
+        int sum = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+        }
+        if (sum & 1) { // odd ki partition nhi hogi
+            return false;
+        }
+
+        int target = sum / 2;
+        int currSum = 0;
+        vector<vector<int>> dp(nums.size() + 1, vector<int>(target + 1, -1));
+        // bool ans= solveUsingRec(nums,index,currSum,target);
+        //bool ans = solveUsingMem(nums, index, currSum, target, dp);
+        // bool ans = solveUsingTab(nums,  target);
+         bool ans = solveUsingSp(nums,  target);
+        return ans;
+    }
+};
