@@ -8,6 +8,7 @@ day by day
 |  |
 | ------- |
 | [0036-valid-sudoku](https://github.com/Sourabh-gupta15/leetcode-grind/tree/master/0036-valid-sudoku) |
+| [0485-max-consecutive-ones](https://github.com/Sourabh-gupta15/leetcode-grind/tree/master/0485-max-consecutive-ones) |
 ## Hash Table
 |  |
 | ------- |
